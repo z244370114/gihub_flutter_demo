@@ -1,0 +1,58 @@
+{
+  "@@last_modified": "2020-07-14T17:33:17.411338",
+  "title": "快速开发框架1",
+  "@title": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "language": "语言1",
+  "@language": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "setting": "设置1",
+  "@setting": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "theme": "主题1",
+  "@theme": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "auto": "自动1",
+  "@auto": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "登录1",
+  "@login": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "logout": "退出1",
+  "@logout": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "logoutTip": "登录1",
+  "@logoutTip": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "取消1",
+  "@cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "确定1",
+  "@yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "statemanagement": "状态管理1",
+  "@statemanagement": {
+    "type": "text",
+    "placeholders": {}
+  }
+}
