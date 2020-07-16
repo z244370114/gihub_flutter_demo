@@ -1,9 +1,14 @@
+import 'dart:math';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gihubflutter/common/Git.dart';
 import 'package:gihubflutter/common/Global.dart';
 import 'package:gihubflutter/l10n/GmLocalizations.dart';
 import 'package:gihubflutter/models/index.dart';
 import 'package:gihubflutter/states/UserModel.dart';
+import 'package:gihubflutter/states/WUserModel.dart';
 import 'package:provider/provider.dart';
 
 class LoginRoute extends StatelessWidget {
@@ -24,15 +29,21 @@ class _LoginRoutePageState extends State<LoginRoutePage> {
   bool pwdShow = false; //密码是否显示明文
   GlobalKey _formKey = new GlobalKey<FormState>();
   bool _nameAutoFocus = true;
+  FlutterToast flutterToast;
 
   @override
   void initState() {
     // 自动填充上次登录的用户名，填充后将焦点定位到密码输入框
     _unameController.text = Global.profile.lastLogin;
+//    _unameController.text = "z244370114@outlook.com";
+//    _pwdController.text = "zy6189717";
+    _unameController.text = "zy123456789";
+    _pwdController.text = "123456789";
     if (_unameController.text != null) {
       _nameAutoFocus = false;
     }
     super.initState();
+    flutterToast = FlutterToast(context);
   }
 
   @override
@@ -51,12 +62,12 @@ class _LoginRoutePageState extends State<LoginRoutePage> {
                   autofocus: _nameAutoFocus,
                   controller: _unameController,
                   decoration: InputDecoration(
-                    labelText: "s",
-                    hintText: "1",
+                    labelText: gm.username,
+                    hintText: gm.username,
                     prefixIcon: Icon(Icons.person),
                   ),
                   validator: (v) {
-                    return v.trim().isNotEmpty ? null : " ";
+                    return v.trim().isNotEmpty ? null : gm.userRequired;
                   },
                 ),
                 TextFormField(
@@ -87,7 +98,7 @@ class _LoginRoutePageState extends State<LoginRoutePage> {
                     constraints: BoxConstraints.expand(height: 55.0),
                     child: RaisedButton(
                       color: Theme.of(context).primaryColor,
-                      onPressed: _onLogin,
+                      onPressed: _onLogins,
                       textColor: Colors.white,
                       child: Text(gm.login),
                     ),
@@ -101,23 +112,48 @@ class _LoginRoutePageState extends State<LoginRoutePage> {
         ));
   }
 
+  ///玩安卓 登录API
+  void _onLogins() async {
+    if ((_formKey.currentState as FormState).validate()) {
+      showLoading();
+      Wusers wusers;
+      try {
+        wusers = await Git(context)
+            .logins(_unameController.text, _pwdController.text);
+        if (wusers.errorCode == 0) {
+          Provider.of<WUserModel>(context, listen: false).users = wusers;
+        } else {
+          _showToast(wusers.errorMsg);
+        }
+      } catch (e) {
+        _showToast(e.toString());
+      } finally {
+        // 隐藏loading框
+        Navigator.of(context).pop();
+      }
+      if (wusers != null) {
+        // 返回
+        Navigator.of(context).pop();
+      }
+    }
+  }
+
   void _onLogin() async {
     // 提交前，先验证各个表单字段是否合法
     if ((_formKey.currentState as FormState).validate()) {
-      showLoading();
+//      showLoading();
       User user;
       try {
         user = await Git(context)
-            .login("z244370114@outlook.com", "zy6189717");
-//            .login(_unameController.text, _pwdController.text);
+            .login(_unameController.text, _pwdController.text);
         // 因为登录页返回后，首页会build，所以我们传false，更新user后不触发更新
         Provider.of<UserModel>(context, listen: false).user = user;
       } catch (e) {
         //登录失败则提示
         if (e.response?.statusCode == 401) {
-//          Fluttertoast.showToast(msg: "GmLocalizations");
+          _showToast("登录失败");
         } else {
-//          Fluttertoast.showToast(msg: e.toString());
+          _showToast(e.toString());
         }
       } finally {
         // 隐藏loading框
@@ -128,6 +164,34 @@ class _LoginRoutePageState extends State<LoginRoutePage> {
         Navigator.of(context).pop();
       }
     }
+  }
+
+  var bottom = ToastGravity.BOTTOM;
+
+  _showToast(String content) {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text(content),
+        ],
+      ),
+    );
+
+    flutterToast.showToast(
+      child: toast,
+      gravity: bottom,
+      toastDuration: Duration(seconds: 2),
+    );
   }
 
   showLoading() {

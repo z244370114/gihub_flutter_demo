@@ -38,7 +38,7 @@ class _RepoItemState extends State<RepoItem> {
                   dense: true,
                   leading: gmAvatar(
                     //项目owner头像
-                    widget.repo.owner.avatar_url,
+                    widget.repo.owner.avatarUrl,
                     width: 24.0,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -57,7 +57,7 @@ class _RepoItemState extends State<RepoItem> {
                     children: <Widget>[
                       Text(
                         widget.repo.fork
-                            ? widget.repo.full_name
+                            ? widget.repo.fullName
                             : widget.repo.name,
                         style: TextStyle(
                           fontSize: 15,
@@ -115,17 +115,17 @@ class _RepoItemState extends State<RepoItem> {
             var children = <Widget>[
               Icon(Icons.star),
               Text(" " +
-                  widget.repo.stargazers_count
+                  widget.repo.stargazersCount
                       .toString()
                       .padRight(paddingWidth)),
               Icon(Icons.info_outline),
               Text(" " +
-                  widget.repo.open_issues_count
+                  widget.repo.openIssuesCount
                       .toString()
                       .padRight(paddingWidth)),
 
               Icon(Icons.add), //我们的自定义图标
-              Text(widget.repo.forks_count.toString().padRight(paddingWidth)),
+              Text(widget.repo.forksCount.toString().padRight(paddingWidth)),
             ];
 
             if (widget.repo.fork) {

@@ -41,7 +41,7 @@ class MyDrawer extends StatelessWidget {
                   child: ClipOval(
                     // 如果已登录，则显示用户头像；若未登录，则显示默认头像
                     child: value.isLogin
-                        ? gmAvatar(value.user.avatar_url, width: 80)
+                        ? gmAvatar(value.user.avatarUrl, width: 80)
                         : Image.asset(
                             "imgs/avatar.png",
                             width: 80,

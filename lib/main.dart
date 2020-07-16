@@ -1,5 +1,6 @@
 import 'package:flukit/flukit.dart';
 import 'package:flutter/material.dart';
+import 'package:gihubflutter/models/info_lists_entity.dart';
 import 'package:gihubflutter/states/ThemeModel.dart';
 import 'package:gihubflutter/states/UserModel.dart';
 import 'package:provider/provider.dart';
@@ -9,19 +10,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'common/Git.dart';
 import 'common/Global.dart';
 import 'l10n/GmLocalizations.dart';
-import 'models/repo.dart';
 import 'states/LocaleModel.dart';
 import 'routes/LoginRoute.dart';
 import 'routes/LanguageRoute.dart';
 import 'routes/ThemeChangeRoute.dart';
+import 'states/WUserModel.dart';
+import 'widgets/InfoListItem.dart';
 import 'widgets/MyDrawer.dart';
-import 'widgets/RepoItem.dart';
 
 //void main() => Global.init().then((e) => runApp(MyApp()));
 
 void main() {
-  runApp(MyApp());
   Global.init();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(value: ThemeModel()),
         ChangeNotifierProvider.value(value: UserModel()),
         ChangeNotifierProvider.value(value: LocaleModel()),
+        ChangeNotifierProvider.value(value: WUserModel()),
       ],
       child: Consumer2<ThemeModel, LocaleModel>(
         builder: (BuildContext context, themeMode, localeModel, Widget child) {
@@ -115,8 +117,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildBody() {
-    UserModel userModel = Provider.of<UserModel>(context);
-    if (!userModel.isLogin) {
+    WUserModel userModel = Provider.of<WUserModel>(context);
+//    if (!userModel.isLogin) {
+    if (false) {
       //用户未登录，显示登录按钮
       return Center(
         child: RaisedButton(
@@ -126,14 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } else {
       //已登录，则展示项目列表
-      return InfiniteListView<Repo>(
-        onRetrieveData: (int page, List<Repo> items, bool refresh) async {
-          var data = await Git(context).getRepos(
+      return InfiniteListView<InfoListsDataData>(
+        onRetrieveData:
+            (int page, List<InfoListsDataData> items, bool refresh) async {
+          var data = await Git(context).getReposs(
+            page: 1,
             refresh: refresh,
-            queryParameters: {
-              'page': page,
-              'page_size': 20,
-            },
           );
           //把请求到的新数据添加到items中
           items.addAll(data);
@@ -142,7 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         itemBuilder: (List list, int index, BuildContext ctx) {
           // 项目信息列表项
-          return RepoItem(list[index]);
+          return InfoListItem(list[index]);
+//          return RepoItem(list[index]);
         },
       );
     }

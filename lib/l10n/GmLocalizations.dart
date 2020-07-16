@@ -3,13 +3,6 @@ import 'package:intl/intl.dart';
 import 'messages_all.dart';
 
 class GmLocalizations {
-  String get noDescription => null;
-
-  get password => Intl.message("密码", name: "password");
-
-  get passwordRequired =>
-      Intl.message('密码不能为空', name: 'password can not be blank');
-
   static Future<GmLocalizations> load(Locale locale) {
     final String name =
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
@@ -46,6 +39,18 @@ class GmLocalizations {
   String get yes => Intl.message('确定', name: 'yes');
 
   String get statemanagement => Intl.message('状态管理', name: 'statemanagement');
+
+  String get noDescription => null;
+
+  get password => Intl.message("密码", name: "password");
+
+  get passwordRequired =>
+      Intl.message('密码不能为空', name: 'password can not be blank');
+
+  get username => Intl.message("用户名", name: "username");
+
+  get userRequired =>
+      Intl.message('用户名不能为空', name: 'username can not be blank');
 }
 
 //Locale代理类
