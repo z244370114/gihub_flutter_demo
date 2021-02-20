@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onRetrieveData:
             (int page, List<InfoListsDataData> items, bool refresh) async {
           var data = await Git(context).getReposs(
-            page: 1,
+            page: page,
             refresh: refresh,
           );
           //把请求到的新数据添加到items中
